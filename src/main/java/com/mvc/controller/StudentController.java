@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.mvc.entity.Student;
 import com.mvc.services.StudentServices;
@@ -22,59 +24,29 @@ public class StudentController {
 	private StudentServices studentServices;
 
 	@RequestMapping(value = "/studentAdd", method = RequestMethod.POST)
-	public String addStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int studentId = Integer.parseInt(req.getParameter("studentId"));
-		String studentName = req.getParameter("studentName");
-		String studentEmail = req.getParameter("studentEmail");
-		String studentPassword = req.getParameter("studentPassword");
-
-		Student s = new Student();
-		s.setStudentId(studentId);
-		s.setStudentName(studentName);
-		s.setStudentEmail(studentEmail);
-		s.setStudentPassword(studentPassword);
-		studentServices.addStudent(s);
-
-//		req.setAttribute("studentName", studentName); // What
-//		RequestDispatcher rd = req.getRequestDispatcher("addedStudendt.jsp"); // Where
-//		rd.forward(req, resp);
-		return "index.jsp";
+	public ModelAndView addStudent(Student student) {
+		ModelAndView modelAndView = studentServices.addStudent(student);
+		return modelAndView;
 	}
 
 	@RequestMapping(value = "/displayAllStudent", method = RequestMethod.GET)
-	public void displayAllStudent(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		List<Student> list = studentServices.displayAllStudent();
+	public ModelAndView displayAllStudents() {
+		return studentServices.displayAllStudents();
+	}
 
-		req.setAttribute("list", list); // What
-		RequestDispatcher rd = req.getRequestDispatcher("displayAllStudent.jsp"); // Where
-		rd.forward(req, resp);
-	}
 	@RequestMapping(value = "/updateStudent", method = RequestMethod.GET)
-	public void getStudentData(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int studentId = Integer.parseInt(req.getParameter("studentId"));
-		Student s = studentServices.getStudentData(studentId);
-		req.setAttribute("student", s); // What
-		RequestDispatcher rd = req.getRequestDispatcher("updateStudent.jsp"); // Where
-		rd.forward(req, resp);
+	public ModelAndView findStudentById(@RequestParam int studentId) {
+	    return studentServices.findStudentById(studentId);
 	}
-	
-	@RequestMapping(value = "/updateStu", method = RequestMethod.POST)
-	public String updateStudent(HttpServletRequest req, HttpServletResponse resp) {
-		int studentId = Integer.parseInt(req.getParameter("studentId"));
-		String studentName = req.getParameter("studentName");
-		String studentEmail = req.getParameter("studentEmail");
-		String studentPassword  = req.getParameter("studentPassword");
-		studentServices.updateStudent(studentId, studentName, studentEmail, studentPassword);
-		return "index.jsp";
+
+	@RequestMapping(value = "/saveUpdatedStudent", method = RequestMethod.POST)
+	public ModelAndView updateStudent(Student student) {
+		return studentServices.updateStudent(student);
 	}
-	
-	@RequestMapping(value ="/deleteStudent", method = RequestMethod.GET)
-	public String deleteStudent(HttpServletRequest req, HttpServletResponse resp) {
-		int studentId = Integer.parseInt(req.getParameter("studentId"));
-		System.out.println(studentId);
-		studentServices.deleteStudent(studentId);
-		return "index.jsp";
+
+	@RequestMapping(value = "/deleteStudent", method = RequestMethod.GET)
+	public ModelAndView deleteStudentById(@RequestParam int studentId) {
+		return studentServices.deleteStudentById(studentId);
 	}
-	
+
 }

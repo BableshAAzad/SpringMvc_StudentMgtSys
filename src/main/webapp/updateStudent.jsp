@@ -10,11 +10,11 @@
 <body>
 <h1>Update Student</h1>
 <% Student s = (Student) request.getAttribute("student"); %>
-<form action="updateStu" method="post">
-  <input type="text" value="<%= s.getStudentId() %>" name="studentId" placeholder="Student Id" readonly="readonly" /><br><br>
+<form action="saveUpdatedStudent" method="post">
+  <input type="number" value="<%= s.getStudentId() %>" name="studentId" placeholder="Student Id" readonly="true" /><br><br>
   <input type="text" value="<%= s.getStudentName() %>" name="studentName" placeholder="Student Name" /><br><br>
   <input type="email" value="<%= s.getStudentEmail() %>" name="studentEmail" placeholder="Student Email" /><br><br>
-  <input type="password" value="<%= s.getStudentPassword() %>" name="studentPassword" placeholder="Student Password" /><br><br>
+  <input type="text" value="<%= s.getStudentPassword() %>" name="studentPassword" placeholder="Student Password" /><br><br>
   <input type="submit" value="Update Student" />
 </form>
 </body>

@@ -31,7 +31,7 @@ public class StudentRepository {
 	  em.close();
   }
   
-  public List<Student> displayAllStudent(){
+  public List<Student> displayAllStudents(){
 	  EntityManager em = StudentRepository.getEntityManager();
 	  EntityTransaction etx = em.getTransaction();
 	  etx.begin();
@@ -44,37 +44,36 @@ public class StudentRepository {
 	  return list;
   }
   
-  public Student getStudentData(int studentId) {
+  public Student findStudentById(int studentId) {
 	  EntityManager em = StudentRepository.getEntityManager();
 	  EntityTransaction etx = em.getTransaction();
 	  etx.begin();
-	  Student s = em.find(Student.class, studentId);
+	  Student student = em.find(Student.class, studentId);
 	  etx.commit();
 	  em.close();
-	  return s;
+	  return student;
   }
   
-  public void updateStudent(int studentId, String studentName, String studentEmail, String studentPassword) {
+  public void updateStudent(Student student) {
 	  EntityManager em = StudentRepository.getEntityManager();
 	  EntityTransaction etx = em.getTransaction();
 	  etx.begin();
 	  
-	  Student s = em.find(Student.class, studentId);
-	  s.setStudentName(studentName);
-	  s.setStudentEmail(studentEmail);
-	  s.setStudentPassword(studentPassword);
-	  em.persist(s);
+	  em.merge(student);
 	  
 	  etx.commit();
 	  em.close();
   }
   
-  public void deleteStudent(int studentId) {
+  public void deleteStudentById(int studentId) {
 	  EntityManager em = StudentRepository.getEntityManager();
 	  EntityTransaction etx = em.getTransaction();
 	  etx.begin();
-	  Student s = em.find(Student.class, studentId);
-	  em.remove(s);
+	  
+	  Query query = em.createQuery("delete from Student s where s.studentId = :sid");
+	  query.setParameter("sid", studentId);
+	  int res =  query.executeUpdate();
+	  System.out.println(res);
 	  
 	  etx.commit();
 	  em.close();
