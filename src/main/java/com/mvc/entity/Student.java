@@ -1,7 +1,10 @@
 package com.mvc.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Student {
@@ -10,6 +13,8 @@ public class Student {
 	private String studentName;
 	private String studentEmail;
 	private String studentPassword;
+	@OneToMany
+	private List<SocialProfile> socialProfile;
 
 	public int getStudentId() {
 		return studentId;
@@ -43,12 +48,18 @@ public class Student {
 		this.studentPassword = studentPassword;
 	}
 
+	public List<SocialProfile> getSocialProfile() {
+		return socialProfile;
+	}
+
+	public void setSocialProfile(List<SocialProfile> socialProfile) {
+		this.socialProfile = socialProfile;
+	}
+
 	@Override
 	public String toString() {
 		return "Student [studentId=" + studentId + ", studentName=" + studentName + ", studentEmail=" + studentEmail
 				+ ", studentPassword=" + studentPassword + "]";
 	}
-	
-	
 
 }

@@ -18,6 +18,7 @@
 			<th>StudentName</th>
 			<th>StudentEmail</th>
 			<th>StudentPassword</th>
+			<th>Social Profiles</th>
 			<th>Update</th>
 			<th>Delete</th>
 		</tr>
@@ -31,6 +32,7 @@
 			<td><%=std.getStudentName()%></td>
 			<td><%=std.getStudentEmail()%></td>
 			<td><%=std.getStudentPassword()%></td>
+			<td><a href="displayAllProfiles?studentId=<%=std.getStudentId()%>" >View</a></td>
 			<td><a href="updateStudent?studentId=<%=std.getStudentId()%>" >UPDATE</a></td>
 			<td><a href="deleteStudent?studentId=<%=std.getStudentId()%>">DELETE</a></td>
 		</tr>
