@@ -1,13 +1,5 @@
 package com.mvc.controller;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,25 +14,39 @@ import com.mvc.services.SocialProfileService;
 public class SocialProfileController {
 	@Autowired
 	private SocialProfileService socialProfileService;
-	
-	@RequestMapping(value="/addProfile", method=RequestMethod.POST)
-	public ModelAndView addProfile(SocialProfile socialProfile, @RequestParam int studentId) {
-		System.out.println(socialProfile);
-		return socialProfileService.addProfile(socialProfile, studentId);
+
+	@RequestMapping(value = "/addNewProfile", method = RequestMethod.POST)
+	public ModelAndView addProfile(@RequestParam int studentId, @RequestParam int profileId,
+			@RequestParam String profileName, @RequestParam String url) {
+		return socialProfileService.addProfile(studentId, profileId, profileName, url);
 	}
-	
-	@RequestMapping(value="/displayAllProfiles", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/addProfilePage", method = RequestMethod.GET)
+	public ModelAndView addNewProfile(@RequestParam int studentId) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("addNewProfile.jsp");
+		modelAndView.addObject("studentId", studentId);
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/displayAllProfiles", method = RequestMethod.GET)
 	public ModelAndView displayAllProfiles(@RequestParam int studentId) {
 		return socialProfileService.displayAllProfiles(studentId);
 	}
-	
-//	@RequestMapping(value="/displayAllProfiles", method=RequestMethod.GET)
-//	public void displayAllProfiles(@RequestParam int studentId, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-//		List<SocialProfile> profileList = socialProfileService.displayAllProfiles(studentId);
-//		System.out.println(profileList+" +++++");
-//		System.out.println("-----------------------------------");
-//		req.setAttribute("profileList", profileList);
-//		RequestDispatcher rd = req.getRequestDispatcher("displayAllProfiles.jsp");
-//		rd.forward(req, resp);
-//	}
+
+	@RequestMapping(value = "/deleteProfile", method = RequestMethod.GET)
+	public ModelAndView deleteProfileById(@RequestParam int profileId, @RequestParam int studentId) {
+		return socialProfileService.deleteProfileById(profileId, studentId);
+	}
+
+	@RequestMapping(value = "/updateProfile", method = RequestMethod.GET)
+	public ModelAndView updateProfile(@RequestParam int profileId, @RequestParam int studentId) {
+		return socialProfileService.updateProfile(profileId, studentId);
+	}
+
+	@RequestMapping(value = "/updateProfileData", method = RequestMethod.POST)
+	public ModelAndView updateProfileData(@RequestParam int studentId, @RequestParam int profileId,
+			@RequestParam String profileName, @RequestParam String url) {
+		return socialProfileService.updateProfileData(studentId, profileId, profileName, url);
+	}
 }

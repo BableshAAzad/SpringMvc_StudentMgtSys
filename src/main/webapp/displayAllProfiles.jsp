@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Display All profile</title>
 </head>
 <body>
 <% List<SocialProfile> profileList = (List) request.getAttribute("profileList"); %>
@@ -29,8 +29,8 @@
 			<td><%=sp.getProfileId()%></td>
 			<td><%=sp.getProfileName()%></td>
 			<td><%=sp.getUrl()%></td>
-			<td><a href="updateProfile?studentId=<%=sp.getProfileId()%>">UPDATE</a></td>
-			<td><a href="deleteProfile?studentId=<%=sp.getProfileId()%>">DELETE</a></td>
+			<td><a href="updateProfile?profileId=<%=sp.getProfileId()%>&studentId=<%=sp.getStudent().getStudentId()%>">UPDATE</a></td>
+			<td><a href="deleteProfile?profileId=<%=sp.getProfileId()%>&studentId=<%=sp.getStudent().getStudentId()%>">DELETE</a></td>
 		</tr>
 		<%
 		}
@@ -38,7 +38,7 @@
 		</tbody>
 	</table>
 	<h2>
-		<a href="addNewProfile.jsp">Add New Profile</a>
+		<a href="addProfilePage?studentId=<%=request.getAttribute("studentId")%>">Add New Profile</a>
 	</h2>
 	<h2>
 		<a href="index.jsp">Home Page</a>

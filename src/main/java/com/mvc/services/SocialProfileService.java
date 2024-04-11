@@ -14,11 +14,12 @@ public class SocialProfileService {
 	@Autowired
 	private SocialProfileRepository socialProfileRepository;
 
-	public ModelAndView addProfile(SocialProfile socialProfile, int studentId) {
-		socialProfileRepository.addProfile(socialProfile, studentId);
+	public ModelAndView addProfile(int studentId, int profileId, String profileName, String url) {
+		socialProfileRepository.addProfile(studentId, profileId, profileName, url);
 		List<SocialProfile> profileList = socialProfileRepository.displayAllProfiles(studentId);
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("profileList", profileList);
+		modelAndView.addObject("studentId", studentId);
 		modelAndView.setViewName("displayAllProfiles.jsp");
 		return modelAndView;
 	}
@@ -27,14 +28,38 @@ public class SocialProfileService {
 		List<SocialProfile> profileList = socialProfileRepository.displayAllProfiles(studentId);
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("profileList", profileList);
+		modelAndView.addObject("studentId", studentId);
 		modelAndView.setViewName("displayAllProfiles.jsp;");
 		return modelAndView;
 	}
 
-//	public List<SocialProfile> displayAllProfiles(int studentId) {
-//			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-//			List<SocialProfile> displayAllProfiles  = socialProfileRepository.displayAllProfiles(studentId);
-//			System.out.println(displayAllProfiles+"  -->-->-->-->-->--><--<==");
-//		return displayAllProfiles;
-//	}
+	public ModelAndView deleteProfileById(int profileId, int studentId) {
+		socialProfileRepository.deleteProfileById(profileId, studentId);
+		List<SocialProfile> profileList = socialProfileRepository.displayAllProfiles(studentId);
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("profileList", profileList);
+		modelAndView.addObject("studentId", studentId);
+		modelAndView.setViewName("displayAllProfiles.jsp");
+		return modelAndView;
+	}
+
+	public ModelAndView updateProfile(int profileId, int studentId) {
+		SocialProfile sp = socialProfileRepository.updateProfile(profileId, studentId);
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("sp", sp);
+		modelAndView.addObject("studentId", studentId);
+		modelAndView.setViewName("updateProfile.jsp");
+		return modelAndView;
+	}
+
+	public ModelAndView updateProfileData(int studentId, int profileId, String profileName, String url) {
+		socialProfileRepository.updateProfileData(studentId, profileId, profileName, url);
+		List<SocialProfile> profileList = socialProfileRepository.displayAllProfiles(studentId);
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("profileList", profileList);
+		modelAndView.addObject("studentId", studentId);
+		modelAndView.setViewName("displayAllProfiles.jsp");
+		return modelAndView;
+	}
+
 }

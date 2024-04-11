@@ -1,81 +1,81 @@
 package com.mvc.repository;
 
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Repository;
 
+import com.mvc.entity.SocialProfile;
 import com.mvc.entity.Student;
 
 @Repository
 public class StudentRepository {
-	public static EntityManager getEntityManager() {
-		  EntityManagerFactory emf = Persistence.createEntityManagerFactory("studentdb");
-		  EntityManager em = emf.createEntityManager();
-		  return em;
-	  }
 	
-  public void addStudent(Student s) {
-	  EntityManager em = StudentRepository.getEntityManager();
-	  EntityTransaction etx = em.getTransaction();
-	  etx.begin();
-	  
-	  em.persist(s);
-	  
-	  etx.commit();
-	  em.close();
-  }
-  
-  public List<Student> displayAllStudents(){
-	  EntityManager em = StudentRepository.getEntityManager();
-	  EntityTransaction etx = em.getTransaction();
-	  etx.begin();
-	  
-	  Query q = em.createQuery("from Student");
-	  List<Student> list = q.getResultList();
-	  
-	  etx.commit();
-	  em.close();
-	  return list;
-  }
-  
-  public Student findStudentById(int studentId) {
-	  EntityManager em = StudentRepository.getEntityManager();
-	  EntityTransaction etx = em.getTransaction();
-	  etx.begin();
-	  Student student = em.find(Student.class, studentId);
-	  etx.commit();
-	  em.close();
-	  return student;
-  }
-  
-  public void updateStudent(Student student) {
-	  EntityManager em = StudentRepository.getEntityManager();
-	  EntityTransaction etx = em.getTransaction();
-	  etx.begin();
-	  
-	  em.merge(student);
-	  
-	  etx.commit();
-	  em.close();
-  }
-  
-  public void deleteStudentById(int studentId) {
-	  EntityManager em = StudentRepository.getEntityManager();
-	  EntityTransaction etx = em.getTransaction();
-	  etx.begin();
-	  
-	  Query query = em.createQuery("delete from Student s where s.studentId = :sid");
-	  query.setParameter("sid", studentId);
-	  int res =  query.executeUpdate();
-	  System.out.println(res);
-	  
-	  etx.commit();
-	  em.close();
-  }
+	public static Session getSession() {
+		Configuration cfg = new Configuration().configure().addAnnotatedClass(Student.class).addAnnotatedClass(SocialProfile.class);
+		SessionFactory factory = cfg.buildSessionFactory();
+		Session session = factory.openSession();
+		return session;
+	}
+
+	public void addStudent(Student s) {
+		Session session = StudentRepository.getSession();
+		Transaction tx = session.beginTransaction();
+
+		session.save(s);
+
+		tx.commit();
+		session.close();
+	}
+
+	public List<Student> displayAllStudents() {
+		Session session = StudentRepository.getSession();
+		Transaction tx = session.beginTransaction();
+
+		Query q = session.createQuery("from Student");
+		List<Student> list = q.getResultList();
+
+		tx.commit();
+		session.close();
+		return list;
+	}
+
+	public Student findStudentById(int studentId) {
+		Session session = StudentRepository.getSession();
+		Transaction tx = session.beginTransaction();
+
+		Student student = session.get(Student.class, studentId);
+
+		tx.commit();
+		session.close();
+		return student;
+	}
+
+	public void updateStudent(Student student) {
+		Session session = StudentRepository.getSession();
+		Transaction tx = session.beginTransaction();
+
+		session.update(student);
+
+		tx.commit();
+		session.close();
+	}
+
+	public void deleteStudentById(int studentId) {
+		Session session = StudentRepository.getSession();
+		Transaction tx = session.beginTransaction();
+
+		Student s = session.load(Student.class, studentId);
+		List<SocialProfile> list = s.getSocialProfile();
+		for(SocialProfile sp : list) {
+			session.delete(sp);
+		}
+		session.delete(s);
+
+		tx.commit();
+		session.close();
+	}
 }
